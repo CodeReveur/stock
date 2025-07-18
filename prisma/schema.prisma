@@ -1,0 +1,136 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model products {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  price       Float
+  unit        String
+  supplier    String
+  status      String
+  stock       Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model categories {
+  id     Int      @id @default(autoincrement())
+  batch  String
+  name   String
+  limit  Int @default(10)
+}
+
+model users {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+}
+
+model purchase_orders {
+  id            Int      @id @default(autoincrement())
+  purchase_code String
+  label         String
+  product       Int
+  price         Float
+  supplier      String
+  status        String
+  stock         Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model orders {
+  id            Int      @id @default(autoincrement())
+  order_code    String
+  supplier      String @default("N/A")
+  customer      Int
+  customerInfo  customers @relation(fields: [customer], references: [id])
+  product       String
+  amount        Float
+  status        String
+  type          String
+  invoice       String
+  comment       String @default("N/A")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model customers {
+  id               Int      @id @default(autoincrement())
+  name             String
+  prefered_payment String
+  account          String
+  phone            String
+  email            String
+  title            String
+  tin              String @default("N/A")
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  orders           orders[]
+}
+
+model report {
+  id        String   @id @default(uuid())
+  file_url  String @default("#")
+  type      String
+  from_date DateTime
+  to_date   DateTime
+  format    String   // e.g., "PDF", "Excel"
+  data      Json
+  createdAt DateTime @default(now())
+}
+
+model notification {
+  id        String   @id @default(uuid())
+  file_url  String @default("#")
+  type      String
+  details   String  
+  action    String
+  createdAt DateTime @default(now())
+}
+
+model settings {
+  id               Int      @id @default(autoincrement())
+  site_name        String   @default("Kamero Stock Management")
+  logo_url         String?  // Optional logo image
+  stamp_url        String?  // Optional stamp image
+  tin              String   @default("N/A")
+  contact_email    String?
+  contact_phone    String?
+  address          String?
+  currency         String   @default("RWF")
+  tax_rate         Float?   @default(0.18)
+  low_stock_alert  Int      @default(10) // Notify if stock below this
+  notify_admin     Boolean? @default(true)
+  admin_access     Boolean? @default(false)
+  enable_checkout  Boolean  @default(true)
+  maintenance_mode Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model preferences {
+  id               Int      @id @default(autoincrement())
+  prefers_dark     Boolean  @default(false)
+  receive_emails   Boolean  @default(true)
+  language         String   @default("en")
+  show_tooltips    Boolean  @default(true)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model ProductKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+  appId     String?
+}

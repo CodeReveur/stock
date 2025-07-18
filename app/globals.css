@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: black;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: black;
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+@keyframes shimmer {
+  0% {
+      background-position: -100% 0;
+  }
+  100% {
+      background-position: 100% 0;
+  }
+}
+
+.preloadder {
+  width: 100%;
+  background: linear-gradient(90deg, #262626 25%, #545454  50%, #262626 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px; /* Rounded edges for smooth look */
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;  /* Smallest width */
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1b1b1b;  /* neutral-900 */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #065f46;  /* emerald-900 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #047857;  /* emerald-700 */
+}
+
+::-webkit-scrollbar-corner {
+  background: #27272a; /* neutral-800 */
+}
